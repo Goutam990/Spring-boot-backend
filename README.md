@@ -1,12 +1,12 @@
 # Spring Boot Backend
 
 ## Project Overview
-This project is a Spring Boot application that provides a backend system for managing users, patients, and heart rate data. It includes RESTful API endpoints for user registration, login, and patient management, as well as heart rate data recording.
+This project is a Spring Boot application that provides a backend system for managing users, patients, and heart rate data. It includes RESTful API endpoints for user registration, login, patient management, and heart rate data recording.
 
 ## Technologies Used
 - Spring Boot
 - Spring Data JPA
-- H2 Database (or PostgreSQL/MySQL)
+- PostgreSQL
 - Lombok
 - Swagger (Springdoc OpenAPI)
 
@@ -14,12 +14,13 @@ This project is a Spring Boot application that provides a backend system for man
 
 ### Prerequisites
 - Java 11 or higher
-- Maven or Gradle
+- Maven
+- PostgreSQL
 - IDE (e.g., IntelliJ IDEA, Eclipse)
 
 ### Installation
 1. Clone the repository:
-   ```
+   ```sh
    git clone <repository-url>
    cd spring-boot-backend
    ```
@@ -109,5 +110,3 @@ http://localhost:8080/swagger-ui.html
 ## Testing
 Basic unit tests are included for controllers, services, and repositories using JUnit and Mockito.
 
-## License
-This project is licensed under the MIT License.

@@ -1,5 +1,5 @@
-INSERT INTO user (id, name, email, password) VALUES (1, 'John Doe', 'john.doe@example.com', 'password123');
-INSERT INTO user (id, name, email, password) VALUES (2, 'Jane Smith', 'jane.smith@example.com', 'password456');
+INSERT INTO users (id, name, email, password) VALUES (1, 'John Doe', 'john.doe@example.com', 'password123');
+INSERT INTO users (id, name, email, password) VALUES (2, 'Jane Smith', 'jane.smith@example.com', 'password456');
 
 INSERT INTO patient (id, name, age, gender, user_id) VALUES (1, 'Alice Johnson', 30, 'Female', 1);
 INSERT INTO patient (id, name, age, gender, user_id) VALUES (2, 'Bob Brown', 45, 'Male', 1);

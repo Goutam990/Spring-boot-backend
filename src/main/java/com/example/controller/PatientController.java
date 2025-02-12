@@ -1,30 +1,33 @@
 package com.example.controller;
 
 import com.example.dto.PatientDto;
-import com.example.entity.Patient;
 import com.example.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/api/patients")
 public class PatientController {
 
-    @Autowired
-    private PatientService patientService;
+    private final PatientService patientService;
+
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     @PostMapping
-    public ResponseEntity<Patient> addPatient(@RequestBody Patient patient) {
-        return ResponseEntity.ok(patientService.addPatient(patient));
+    public PatientDto createPatient(@RequestBody PatientDto patientDto) {
+        return patientService.createPatient(patientDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
-        return patientService.getPatientById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public PatientDto getPatient(@PathVariable Long id) {
+        return patientService.getPatientById(id);
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<PatientDto> getPatientsByUser(@PathVariable Long userId) {
+        return patientService.getPatientDtosByUserId(userId);
     }
 }

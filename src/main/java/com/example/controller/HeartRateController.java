@@ -1,27 +1,28 @@
 package com.example.controller;
 
-import com.example.entity.HeartRate;
+import com.example.dto.HeartRateDto;
 import com.example.service.HeartRateService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/heartrate")
+@RequestMapping("/api/heart-rates")
 public class HeartRateController {
 
-    @Autowired
-    private HeartRateService heartRateService;
+    private final HeartRateService heartRateService;
 
-    @PostMapping
-    public ResponseEntity<HeartRate> recordHeartRate(@RequestBody HeartRate heartRate) {
-        return ResponseEntity.ok(heartRateService.recordHeartRate(heartRate));
+    public HeartRateController(HeartRateService heartRateService) {
+        this.heartRateService = heartRateService;
     }
 
-    @GetMapping("/{patientId}")
-    public ResponseEntity<List<HeartRate>> getHeartRatesByPatientId(@PathVariable Long patientId) {
-        return ResponseEntity.ok(heartRateService.getHeartRatesByPatientId(patientId));
+    @PostMapping
+    public HeartRateDto recordHeartRate(@RequestBody HeartRateDto heartRateDto) {
+        return heartRateService.createHeartRate(heartRateDto);
+    }
+
+    @GetMapping("/patient/{patientId}")
+    public List<HeartRateDto> getHeartRatesByPatient(@PathVariable Long patientId) {
+        return heartRateService.getHeartRatesByPatientId(patientId);
     }
 }
