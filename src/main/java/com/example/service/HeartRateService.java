@@ -1,3 +1,4 @@
+
 package com.example.service;
 
 import com.example.dto.HeartRateDto;
@@ -34,16 +35,6 @@ public class HeartRateService {
     public List<HeartRateDto> getHeartRatesByPatientId(Long patientId) {
         List<HeartRate> heartRates = heartRateRepository.findByPatientId(patientId);
         return heartRates.stream().map(this::convertToDto).collect(Collectors.toList());
-    }
-
-    public HeartRateDto getHeartRateById(Long id) {
-        return heartRateRepository.findById(id)
-                .map(this::convertToDto)
-                .orElseThrow(() -> new ResourceNotFoundException("Heart rate not found with id: " + id));
-    }
-
-    public void deleteHeartRate(Long id) {
-        heartRateRepository.deleteById(id);
     }
 
     private HeartRateDto convertToDto(HeartRate heartRate) {

@@ -1,5 +1,4 @@
 com\example\entity\User.class
-com\example\controller\HeartRateController.class
 com\example\repository\HeartRateRepository.class
 com\example\SpringBootBackendApplication.class
 com\example\dto\PatientDto.class
