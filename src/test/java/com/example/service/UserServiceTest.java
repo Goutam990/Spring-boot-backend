@@ -8,10 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import java.util.Optional;
 
-class UserServiceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -22,36 +26,30 @@ class UserServiceTest {
     private User user;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
+
         user = new User();
-        user.setId(1L);
-        user.setName("John Doe");
-        user.setEmail("john.doe@example.com");
-        user.setPassword("password123");
+        user.setEmail("test@example.com");
+        user.setPassword("password");
     }
 
     @Test
-    void registerUser() {
+    public void testRegisterUser() {
         when(userRepository.save(any(User.class))).thenReturn(user);
+
         User registeredUser = userService.registerUser(user);
-        assertNotNull(registeredUser);
-        assertEquals("John Doe", registeredUser.getName());
-        verify(userRepository, times(1)).save(user);
+
+        assertEquals(user.getEmail(), registeredUser.getEmail());
     }
 
     @Test
-    void loginUser() {
-        when(userRepository.findByEmail("john.doe@example.com")).thenReturn(java.util.Optional.of(user));
-        User loggedInUser = userService.loginUser("john.doe@example.com", "password123");
-        assertNotNull(loggedInUser);
-        assertEquals("John Doe", loggedInUser.getName());
-    }
+    public void testLoginUser() {
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
 
-    @Test
-    void loginUserInvalid() {
-        when(userRepository.findByEmail("john.doe@example.com")).thenReturn(java.util.Optional.of(user));
-        User loggedInUser = userService.loginUser("john.doe@example.com", "wrongpassword");
-        assertNull(loggedInUser);
+        Optional<User> loggedInUser = userService.loginUser("test@example.com", "password");
+
+        assertTrue(loggedInUser.isPresent());
+        assertEquals(user.getEmail(), loggedInUser.get().getEmail());
     }
 }

@@ -1,47 +1,37 @@
 package com.example.service;
 
-import com.example.controller.HeartRateController;
 import com.example.entity.HeartRate;
 import com.example.entity.Patient;
 import com.example.repository.HeartRateRepository;
-import com.example.repository.PatientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(HeartRateController.class)
 public class HeartRateServiceTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private HeartRateService heartRateService;
-
-    @MockBean
-    private PatientRepository patientRepository;
-
-    @MockBean
+    @Mock
     private HeartRateRepository heartRateRepository;
+
+    @InjectMocks
+    private HeartRateService heartRateService;
 
     private HeartRate heartRate;
     private Patient patient;
 
     @BeforeEach
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
+
         patient = new Patient();
         patient.setName("John Doe");
         patient.setAge(30);
@@ -54,20 +44,21 @@ public class HeartRateServiceTest {
     }
 
     @Test
-    public void testRecordHeartRate() throws Exception {
-        when(heartRateService.recordHeartRate(any(HeartRate.class))).thenReturn(heartRate);
+    public void testRecordHeartRate() {
+        when(heartRateRepository.save(any(HeartRate.class))).thenReturn(heartRate);
 
-        mockMvc.perform(post("/heartrate")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"patient\":{\"id\":1},\"timestamp\":\"2025-02-12T00:00:00\",\"heartRateValue\":75}"))
-                .andExpect(status().isOk());
+        HeartRate savedHeartRate = heartRateService.recordHeartRate(heartRate);
+
+        assertEquals(heartRate.getHeartRateValue(), savedHeartRate.getHeartRateValue());
     }
 
     @Test
-    public void testGetHeartRatesByPatientId() throws Exception {
-        when(heartRateService.getHeartRatesByPatientId(1L)).thenReturn(Collections.singletonList(heartRate));
+    public void testGetHeartRatesByPatientId() {
+        when(heartRateRepository.findByPatientId(1L)).thenReturn(Collections.singletonList(heartRate));
 
-        mockMvc.perform(get("/heartrate/1"))
-                .andExpect(status().isOk());
+        List<HeartRate> heartRates = heartRateService.getHeartRatesByPatientId(1L);
+
+        assertEquals(1, heartRates.size());
+        assertEquals(heartRate.getHeartRateValue(), heartRates.get(0).getHeartRateValue());
     }
 }
